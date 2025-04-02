@@ -21,6 +21,9 @@ router.post('/signup',async(req,res)=>{
        if(findSignUpUser.length >0)
         {
         console.log("email already registered")
+        res.status(500).json({
+           error: "email already registered"
+        })
         }
 
     const hashcode = await bcrypt.hash(req.body.password,10)
@@ -61,7 +64,10 @@ router.post('/login',async(req,res)=>{
     console.log(findLoginUser)
     if(findLoginUser.length == 0)
     {
-        console.log("email already registered")
+        console.log("email is not registered")
+        res.status(500).json({
+            error: "email is not registered"
+         })
     }
 
     const passwordMatch = await bcrypt.compare(req.body.password,findLoginUser[0].password)
@@ -69,6 +75,9 @@ router.post('/login',async(req,res)=>{
     if(passwordMatch == false)
     {
         console.log("invalid password")
+        res.status(500).json({
+            error: "invalid password"
+         })
     }
 
     const farmerToken = await jwt.sign({
